@@ -1,4 +1,4 @@
-package com.example.material_3_demo
+package com.chickies.smart_micro
 
 import io.flutter.embedding.android.FlutterActivity
 
