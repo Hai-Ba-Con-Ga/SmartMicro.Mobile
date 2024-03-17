@@ -6,7 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:SmartMicro.Mobile/main.dart';
-import 'package:SmartMicro.Mobile/typography_screen.dart';
+import 'package:SmartMicro.Mobile/material3_demo/typography_screen.dart';
 
 import 'component_screen_test.dart';
 
