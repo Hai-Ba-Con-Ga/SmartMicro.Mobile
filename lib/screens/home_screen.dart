@@ -1,3 +1,4 @@
+import 'package:SmartMicro.Mobile/BLE/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -40,20 +41,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: [
         Scaffold(
-          extendBodyBehindAppBar: true,
-          extendBody: true,
+          // extendBodyBehindAppBar: true,
+          // extendBody: true,
           backgroundColor: backgroundColor,
-          //* APP BAR
-          appBar: AppBar(
-            title: Text('Home Screen', style: TextStyle(color: Colors.white)),
-            backgroundColor: appbarColor,
-          ),
           //* BODY
           body: PageView(
             controller: _pageController,
             onPageChanged: _onPageChanged,
             children: <Widget>[
-              Container(color: backgroundColor, child: Text('Home Page1')),
+              FlutterBlueApp(),
+              // Container(color: backgroundColor, child: Text('Home Page1')),
               Container(color: backgroundColor, child: Text('Home Page1')),
               Container(color: appbarColor, child: Text('Home Page1')),
               // Container(color: appbarColor, child: Text('Home Page1')),

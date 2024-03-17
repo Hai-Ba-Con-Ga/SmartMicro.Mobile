@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
+import 'package:SmartMicro.Mobile/BLE/main.dart';
 import 'package:SmartMicro.Mobile/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import 'constants.dart';
+import 'material3_demo/constants.dart';
 
 void main() async {
   // var analyzer = WebStartupAnalyzer(additionalFrameCount: 10);
@@ -25,6 +26,9 @@ void main() async {
   //     'additionalFrames': analyzer.onAdditionalFrames.value,
   //   }));
   // });
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
+
   runApp(
     const App(),
   );
@@ -105,8 +109,8 @@ class _AppState extends State<App> {
       //   handleImageSelect: handleImageSelect,
       //   colorSelectionMethod: colorSelectionMethod,
       // ),
-      home: 
-      HomeScreen(),
+      home: HomeScreen(),
+      navigatorObservers: [BluetoothAdapterStateObserver()],
     );
   }
 }
