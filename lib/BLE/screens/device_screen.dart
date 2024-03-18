@@ -178,24 +178,36 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   Widget _uartServiceTiles(BuildContext context, BluetoothDevice d) {
-    _uartService = _services.firstWhereOrNull((element) => element.uuid.toString() == BleUUID.UART_SERVICE_UUID);
+    _uartService = _services.firstWhereOrNull((element) => element.uuid.toString().toUpperCase() == BleUUID.UART_SERVICE_UUID);
+
+    // if (_services.length != 0) {
+
+    //   if (_services.firstOrNull != null) {
+    //     print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //     print(_services.last.toString().toUpperCase());
+    //   }
+    // }
 
     //test
-    // _uartService = _services.last;
+    // if (_services.isNotEmpty) {
+    //   _uartService = _services.last;
+    // }
 
     if (_uartService == null) {
-      return Container(child: Text("UART Service not found"));
+      return Container(child: Text("UART Service not found:"));
     }
 
     BluetoothCharacteristic? rxChar = _uartService!.characteristics.firstWhereOrNull(
-      (c) => c.uuid.toString() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID,
+      (c) => c.uuid.toString().toUpperCase() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID,
     );
 
     //test
-    // RxChar = _uartService!.characteristics.first;
+    // if (_services.isNotEmpty) {
+    //   rxChar = _uartService!.characteristics.first;
+    // }
 
     if (rxChar == null) {
-      return Container(child: Text("UART Service not found"));
+      return Container(child: Text("UART RxChar not found"));
     }
 
     return Row(
@@ -203,14 +215,14 @@ class _DeviceScreenState extends State<DeviceScreen> {
       children: [
         Column(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
           ],
         ),
         Column(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.on))}, child: Text("on")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.off))}, child: Text("off")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.on))}, child: Text("on")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.off))}, child: Text("off")),
           ],
         )
       ],
