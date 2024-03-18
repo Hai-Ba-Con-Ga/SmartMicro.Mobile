@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:SmartMicro.Mobile/BLE/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -56,9 +57,12 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
     }
   }
 
-  Future onWritePressed() async {
+  Future onWritePressed({String? message}) async {
     try {
-      await c.write(_getRandomBytes(), withoutResponse: c.properties.writeWithoutResponse);
+      await c.write(
+        message == null ? _getRandomBytes() : BleData().stringToBytes(message),
+        withoutResponse: c.properties.writeWithoutResponse,
+      );
       Snackbar.show(ABC.c, "Write: Success", success: true);
       if (c.properties.read) {
         await c.read();

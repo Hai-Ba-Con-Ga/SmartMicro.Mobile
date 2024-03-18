@@ -28,6 +28,7 @@ class _ScanScreenState extends State<ScanScreen> {
   void initState() {
     super.initState();
 
+    //add event update scan results when scan.
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       _scanResults = results;
       if (mounted) {
@@ -52,6 +53,7 @@ class _ScanScreenState extends State<ScanScreen> {
     super.dispose();
   }
 
+  //* on SCAN
   Future onScanPressed() async {
     try {
       _systemDevices = await FlutterBluePlus.systemDevices;
@@ -68,6 +70,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  //* on STOP SCAN
   Future onStopPressed() async {
     try {
       FlutterBluePlus.stopScan();
@@ -76,6 +79,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  //* on CONNECT <-
   void onConnectPressed(BluetoothDevice device) {
     device.connectAndUpdateStream().catchError((e) {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e), success: false);
@@ -84,6 +88,7 @@ class _ScanScreenState extends State<ScanScreen> {
     Navigator.of(context).push(route);
   }
 
+  //* on REFRESH
   Future onRefresh() {
     if (_isScanning == false) {
       FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
@@ -94,6 +99,7 @@ class _ScanScreenState extends State<ScanScreen> {
     return Future.delayed(Duration(milliseconds: 500));
   }
 
+  //* SCAN BUTTON
   Widget buildScanButton(BuildContext context) {
     if (FlutterBluePlus.isScanningNow) {
       return Container(
@@ -119,6 +125,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  //* List of System Devices
   List<Widget> _buildSystemDeviceTiles(BuildContext context) {
     return _systemDevices
         .map(
@@ -136,6 +143,7 @@ class _ScanScreenState extends State<ScanScreen> {
         .toList();
   }
 
+  //* List of Scan Results
   List<Widget> _buildScanResultTiles(BuildContext context) {
     return _scanResults
         .map(
@@ -156,6 +164,7 @@ class _ScanScreenState extends State<ScanScreen> {
           title: Text('Find Devices',
               style: TextStyle(
                 color: ChickiesColor.purple.color,
+                fontWeight: FontWeight.bold
               )),
         ),
         body: RefreshIndicator(

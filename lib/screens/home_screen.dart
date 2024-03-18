@@ -1,4 +1,5 @@
-import 'package:SmartMicro.Mobile/BLE/main.dart';
+import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
+import 'package:SmartMicro.Mobile/screens/test_blue_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,8 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPageChanged: _onPageChanged,
             children: <Widget>[
               FlutterBlueApp(),
-              // Container(color: backgroundColor, child: Text('Home Page1')),
-              Container(color: backgroundColor, child: Text('Home Page1')),
+              TestBlueScreen(),
               Container(color: appbarColor, child: Text('Home Page1')),
               // Container(color: appbarColor, child: Text('Home Page1')),
             ],

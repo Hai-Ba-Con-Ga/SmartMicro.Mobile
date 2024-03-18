@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:SmartMicro.Mobile/BLE/constants.dart';
+import 'package:chickies_ui/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
 
 import '../widgets/service_tile.dart';
 import '../widgets/characteristic_tile.dart';
@@ -32,10 +35,15 @@ class _DeviceScreenState extends State<DeviceScreen> {
   late StreamSubscription<bool> _isDisconnectingSubscription;
   late StreamSubscription<int> _mtuSubscription;
 
+  BluetoothService? _uartService;
+  BluetoothCharacteristic? _uartRxCharacteristic;
+  BluetoothCharacteristic? _uartTxCharacteristic;
+
   @override
   void initState() {
     super.initState();
 
+    //up services + rssi when connected
     _connectionStateSubscription = widget.device.connectionState.listen((state) async {
       _connectionState = state;
       if (state == BluetoothConnectionState.connected) {
@@ -154,6 +162,61 @@ class _DeviceScreenState extends State<DeviceScreen> {
         .toList();
   }
 
+  Future onWritePressed(BluetoothCharacteristic char, {String? message}) async {
+    try {
+      await char.write(
+        message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message),
+        withoutResponse: char.properties.writeWithoutResponse,
+      );
+      Snackbar.show(ABC.c, "Write: Success", success: true);
+      if (char.properties.read) {
+        await char.read();
+      }
+    } catch (e) {
+      Snackbar.show(ABC.c, prettyException("Write Error:", e), success: false);
+    }
+  }
+
+  Widget _uartServiceTiles(BuildContext context, BluetoothDevice d) {
+    _uartService = _services.firstWhereOrNull((element) => element.uuid.toString() == BleUUID.UART_SERVICE_UUID);
+
+    //test
+    // _uartService = _services.last;
+
+    if (_uartService == null) {
+      return Container(child: Text("UART Service not found"));
+    }
+
+    BluetoothCharacteristic? rxChar = _uartService!.characteristics.firstWhereOrNull(
+      (c) => c.uuid.toString() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID,
+    );
+
+    //test
+    // RxChar = _uartService!.characteristics.first;
+
+    if (rxChar == null) {
+      return Container(child: Text("UART Service not found"));
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
+          ],
+        ),
+        Column(
+          children: [
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.on))}, child: Text("on")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.off))}, child: Text("off")),
+          ],
+        )
+      ],
+    );
+  }
+
   CharacteristicTile _buildCharacteristicTile(BluetoothCharacteristic c) {
     return CharacteristicTile(
       characteristic: c,
@@ -230,7 +293,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           onPressed: _isConnecting ? onCancelPressed : (isConnected ? onDisconnectPressed : onConnectPressed),
           child: Text(
             _isConnecting ? "CANCEL" : (isConnected ? "DISCONNECT" : "CONNECT"),
-            style: Theme.of(context).primaryTextTheme.labelLarge?.copyWith(color: Colors.white),
+            style: Theme.of(context).primaryTextTheme.labelLarge?.copyWith(color: ChickiesColor.purple.color),
           ))
     ]);
   }
@@ -255,6 +318,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
               ),
               buildMtuTile(context),
               ..._buildServiceTiles(context, widget.device),
+              _uartServiceTiles(context, widget.device),
             ],
           ),
         ),
