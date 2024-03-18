@@ -163,6 +163,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   Future onWritePressed(BluetoothCharacteristic char, {String? message}) async {
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    print(message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message));
     try {
       await char.write(
         message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message),
@@ -215,14 +217,14 @@ class _DeviceScreenState extends State<DeviceScreen> {
       children: [
         Column(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
           ],
         ),
         Column(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.on))}, child: Text("on")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar!, message: BleData().mapping(MessageData.off))}, child: Text("off")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.on))}, child: Text("on")),
+            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.off))}, child: Text("off")),
           ],
         )
       ],
