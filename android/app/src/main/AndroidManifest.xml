@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chickies.smart_micro">
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
+
          <!-- Allow Bluetooth -->
      <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
