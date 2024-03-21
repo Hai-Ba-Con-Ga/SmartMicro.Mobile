@@ -6,32 +6,37 @@ class RoundedContainer extends Container {
     super.key,
     super.height,
     super.width,
-    super.padding = const EdgeInsets.all(100),
+    super.padding = const EdgeInsets.all(10),
+    super.margin = const EdgeInsets.all(20),
     super.child,
+    super.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: padding,
+        margin: margin,
+        constraints: constraints,
         decoration: BoxDecoration(
-          color: ChickiesColor.white,
+          color: color ?? ChickiesColor.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               color: ChickiesColor.shadow,
-              blurRadius: 20,
-              offset: Offset(0, 10),
+              blurRadius: 10,
+              offset: Offset(0, 5),
             ),
             BoxShadow(
-              color: ChickiesColor.white,
-              offset: Offset(-10, 0),
+              color: color ?? ChickiesColor.white,
+              offset: Offset(-5, 0),
             ),
             BoxShadow(
-              color: ChickiesColor.white,
-              offset: Offset(10, 0),
+              color: color ?? ChickiesColor.white,
+              offset: Offset(5, 0),
             ),
           ],
         ),
-        child: super.build(context));
+        child: child);
   }
 }

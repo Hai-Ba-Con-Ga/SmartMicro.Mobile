@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
+      backgroundColor: ChickiesColor.background,
       appBar: AppBar(
         title: Image.asset(
           'assets/images/chickies_logo.png',
@@ -55,7 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   SizedBox(height: 150),
                   //*body from here
-                  RoundedContainer(child: Text("321"),),
+                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
+                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
+                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
+                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
+                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
                 ],
               ),
             ),
