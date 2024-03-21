@@ -307,7 +307,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           onPressed: _isConnecting ? onCancelPressed : (isConnected ? onDisconnectPressed : onConnectPressed),
           child: Text(
             _isConnecting ? "CANCEL" : (isConnected ? "DISCONNECT" : "CONNECT"),
-            style: Theme.of(context).primaryTextTheme.labelLarge?.copyWith(color: ChickiesColor.purple.color),
+            style: Theme.of(context).primaryTextTheme.labelLarge?.copyWith(color: ChickiesColor.purple),
           ))
     ]);
   }

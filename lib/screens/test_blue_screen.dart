@@ -178,7 +178,7 @@ class _TestBlueScreenState extends State<TestBlueScreen> {
               const Text("BLE UART Devices found:"),
               Container(
                   margin: const EdgeInsets.all(3.0),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple.color, width: 2)),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple, width: 2)),
                   height: 100,
                   child: ListView.builder(
                       itemCount: _foundBleUARTDevices.length,
@@ -206,21 +206,21 @@ class _TestBlueScreenState extends State<TestBlueScreen> {
               Container(
                   margin: const EdgeInsets.all(3.0),
                   width: 1400,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple.color, width: 2)),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple, width: 2)),
                   height: 90,
                   child: Scrollbar(child: SingleChildScrollView(child: Text(_logTexts)))),
               const Text("Received data:"),
               Container(
                   margin: const EdgeInsets.all(3.0),
                   width: 1400,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple.color, width: 2)),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple, width: 2)),
                   height: 90,
                   child: Text(_receivedData.join("\n"))),
               const Text("Send message:"),
               Container(
                   margin: const EdgeInsets.all(3.0),
                   padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple.color, width: 2)),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: ChickiesColor.purple, width: 2)),
                   child: Row(children: <Widget>[
                     Expanded(
                         child: TextField(
@@ -231,7 +231,7 @@ class _TestBlueScreenState extends State<TestBlueScreen> {
                     ElevatedButton(
                         child: Icon(
                           Icons.send,
-                          color: _connected ? ChickiesColor.purple.color : Colors.grey,
+                          color: _connected ? ChickiesColor.purple : Colors.grey,
                         ),
                         onPressed: _connected ? _sendData : () {}),
                   ]))
@@ -252,20 +252,20 @@ class _TestBlueScreenState extends State<TestBlueScreen> {
             onPressed: !_scanning && !_connected ? _startScan : () {},
             child: Icon(
               Icons.play_arrow,
-              color: !_scanning && !_connected ? ChickiesColor.purple.color : Colors.grey,
+              color: !_scanning && !_connected ? ChickiesColor.purple : Colors.grey,
             ),
           ),
           ElevatedButton(
               onPressed: _scanning ? _stopScan : () {},
               child: Icon(
                 Icons.stop,
-                color: _scanning ? ChickiesColor.purple.color : Colors.grey,
+                color: _scanning ? ChickiesColor.purple : Colors.grey,
               )),
           ElevatedButton(
               onPressed: _connected ? _disconnect : () {},
               child: Icon(
                 Icons.cancel,
-                color: _connected ? ChickiesColor.purple.color : Colors.grey,
+                color: _connected ? ChickiesColor.purple : Colors.grey,
               ))
         ],
       );

@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
-enum ChickiesColor {
-  baseColor('M3 Baseline', Color(0xff6750a4)),
-  indigo('Indigo', Colors.indigo),
-  blue('Blue', Colors.blue),
-  teal('Teal', Colors.teal),
-  green('Green', Colors.green),
-  yellow('Yellow', Colors.yellow),
-  orange('Orange', Colors.orange),
-  deepOrange('Deep Orange', Colors.deepOrange),
-  pink('Pink', Colors.pink),
-  purple('purple', Color(0xFF8083e0)),
-  greygreen('purple', Color(0xFFeef2f9)),
-  maxChickiesColor('Max Chickies', Color(0xFF8083e0));
+abstract final class ChickiesColor {
+  static const Color purple = Color(0xFF7e7dd6);
+  static const Color grey = Color(0xFFeef2f9);
+  static const Color shadow =Color.fromARGB(255, 193, 193, 226);
 
-  const ChickiesColor(this.label, this.color);
-  final String label;
-  final Color color;
+  static const Color black = Color(0xFF000000);
+  static const Color white = Color(0xFFFFFFFF);
+
+  static const Color primary = purple;
+  static const Color secondary = grey;
+  static const Color background = grey;
+  static const Color textPrimary = black;
 }

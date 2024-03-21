@@ -1,130 +1,67 @@
-import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
-import 'package:SmartMicro.Mobile/screens/test_blue_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chickies_ui/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:chickies_ui/chickies_ui.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Color get appbarColor => Color(0xFF7e7dd6);
-  Color get backgroundColor => Color(0xFFeef2f9);
-  int _selectedIndex = 0;
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _onItemTapped(int index) {
-    _pageController.jumpToPage(index);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          // extendBodyBehindAppBar: true,
-          // extendBody: true,
-          backgroundColor: backgroundColor,
-          //* BODY
-          body: PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            children: <Widget>[
-              FlutterBlueApp(),
-              TestBlueScreen(),
-              Container(color: appbarColor, child: Text('Home Page1')),
-              // Container(color: appbarColor, child: Text('Home Page1')),
-            ],
-          ),
-          //* Bottom Navigator App Bar
-          bottomNavigationBar: ClipRRect(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(40),
-            ),
-            child: Container(
-              height: 70,
-              decoration: BoxDecoration(boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.9), spreadRadius: 20, blurRadius: 40, offset: Offset(0, 2))]),
-              child: BottomAppBar(
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      AppBarButton(index: 0, icon: const Icon(Icons.home)),
-                      AppBarButton(index: 1, icon: const Icon(Icons.school)),
-                      AppBarButton(index: 2, icon: const Icon(Icons.person)),
-                      const SizedBox(width: 50),
-                    ],
-                  ),
+    return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: Image.asset(
+          'assets/images/chickies_logo.png',
+          height: 80,
+        ),
+        excludeHeaderSemantics: false,
+        toolbarHeight: 90,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: ChickiesColor.primary,
+        elevation: 0,
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.5,
+            top: -MediaQuery.of(context).size.height * 0.5,
+            left: -MediaQuery.of(context).size.height * 0.5,
+            right: -MediaQuery.of(context).size.height * 0.5,
+            child: ClipOval(
+              child: Container(
+                  // height: MediaQuery.of(context).size.height * 0.5 * 2,
+                  // width: MediaQuery.of(context).size.width * 1 * 2,
+                  decoration: BoxDecoration(
+                color: ChickiesColor.primary,
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(50),
                 ),
+              )),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 2,
+            height: MediaQuery.of(context).size.height * 2,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 150),
+                  //*body from here
+                  RoundedContainer(child: Text("321"),),
+                ],
               ),
             ),
           ),
-        ),
-        //* Button Add new...
-        Positioned(
-            child: Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [BoxShadow(color: appbarColor.withOpacity(0.2), spreadRadius: 2, blurRadius: 10, offset: Offset(0, 10))],
-              ),
-              child: FloatingActionButton(
-                onPressed: () {
-                  
-                },
-                child: Icon(Icons.multitrack_audio, color: Colors.white, size: 30),
-                backgroundColor: appbarColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                  Radius.circular(25),
-                )),
-              ),
-            ),
-            left: MediaQuery.of(context).size.width / 4 * 3,
-            bottom: 20),
-      ],
-    );
-  }
-
-  Column AppBarButton({required int index, required Icon icon}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 25,
-          child: IconButton(
-            constraints: const BoxConstraints(),
-            padding: EdgeInsets.zero,
-            icon: icon,
-            onPressed: () => _onItemTapped(index),
-          ),
-        ),
-        _selectedIndex == index ? Icon(Icons.circle, size: 5) : SizedBox.shrink(),
-      ],
+        ],
+      ),
     );
   }
 }

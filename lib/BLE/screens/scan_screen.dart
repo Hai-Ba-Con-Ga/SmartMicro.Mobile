@@ -107,7 +107,7 @@ class _ScanScreenState extends State<ScanScreen> {
         child: ElevatedButton(
           child: const Icon(Icons.stop),
           onPressed: onStopPressed,
-          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple.color, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
         ),
       );
     } else {
@@ -119,7 +119,7 @@ class _ScanScreenState extends State<ScanScreen> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: onScanPressed,
-          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple.color, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
             ),
       );
     }
@@ -163,7 +163,7 @@ class _ScanScreenState extends State<ScanScreen> {
         appBar: AppBar(
           title: Text('Find Devices',
               style: TextStyle(
-                color: ChickiesColor.purple.color,
+                color: ChickiesColor.purple,
                 fontWeight: FontWeight.bold
               )),
         ),

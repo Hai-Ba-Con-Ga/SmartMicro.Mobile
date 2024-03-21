@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
-import 'package:SmartMicro.Mobile/screens/home_screen.dart';
+import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -109,7 +109,7 @@ class _AppState extends State<App> {
       //   handleImageSelect: handleImageSelect,
       //   colorSelectionMethod: colorSelectionMethod,
       // ),
-      home: HomeScreen(),
+      home: NavigatorBar(),
       navigatorObservers: [BluetoothAdapterStateObserver()],
     );
   }

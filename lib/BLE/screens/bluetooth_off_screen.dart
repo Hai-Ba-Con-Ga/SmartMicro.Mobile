@@ -50,7 +50,7 @@ class BluetoothOffScreen extends StatelessWidget {
     return ScaffoldMessenger(
       key: Snackbar.snackBarKeyA,
       child: Scaffold(
-        backgroundColor: ChickiesColor.purple.color,
+        backgroundColor: ChickiesColor.purple,
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
