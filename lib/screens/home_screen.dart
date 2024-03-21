@@ -57,10 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 150),
                   //*body from here
                   RoundedContainer(child: Center(child: Text("123"),), height: 80),
-                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
-                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
-                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
-                  RoundedContainer(child: Center(child: Text("123"),), height: 80),
                 ],
               ),
             ),

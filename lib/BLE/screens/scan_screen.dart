@@ -114,13 +114,13 @@ class _ScanScreenState extends State<ScanScreen> {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         child: ElevatedButton(
-            child: const Text(
-              "SCAN",
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: onScanPressed,
+          child: const Text(
+            "SCAN",
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: onScanPressed,
           style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
-            ),
+        ),
       );
     }
   }
@@ -160,12 +160,20 @@ class _ScanScreenState extends State<ScanScreen> {
     return ScaffoldMessenger(
       key: Snackbar.snackBarKeyB,
       child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        backgroundColor: ChickiesColor.background,
         appBar: AppBar(
-          title: Text('Find Devices',
-              style: TextStyle(
-                color: ChickiesColor.purple,
-                fontWeight: FontWeight.bold
-              )),
+          title: Image.asset(
+            'assets/images/chickies_logo.png',
+            height: 80,
+          ),
+          excludeHeaderSemantics: false,
+          toolbarHeight: 90,
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          foregroundColor: ChickiesColor.primary,
+          elevation: 0,
         ),
         body: RefreshIndicator(
           onRefresh: onRefresh,

@@ -1,4 +1,6 @@
+import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -41,11 +43,8 @@ class _TestSpeechToTextScreenState extends State<TestSpeechToTextScreen> {
     setState(() {});
   }
 
-  /// Each time to start a speech recognition session
-  void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
-    setState(() {});
-  }
+  // /// Each time to start a speech recognition session
+  // void _startListening
 
   /// Manually stop the active speech recognition session
   /// Note that there are also timeouts that each platform enforces
@@ -58,11 +57,7 @@ class _TestSpeechToTextScreenState extends State<TestSpeechToTextScreen> {
 
   /// This is the callback that the SpeechToText plugin calls when
   /// the platform returns recognized words.
-  void _onSpeechResult(SpeechRecognitionResult result) {
-    setState(() {
-      _lastWords = result.recognizedWords;
-    });
-  }
+  // void _onSpeechResult
 
   @override
   Widget build(BuildContext context) {
@@ -98,15 +93,47 @@ class _TestSpeechToTextScreenState extends State<TestSpeechToTextScreen> {
                 ),
               ),
             ),
+            BlocBuilder<VoiceBloc, VoiceState>(
+              buildWhen: (previous, current) => previous.message != current.message,
+              builder: (context, state) {
+                return Container(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    state.message,
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed:
-            // If not yet listening for speech start, otherwise stop
-            _speechToText.isNotListening ? _startListening : _stopListening,
-        tooltip: 'Listen',
-        child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+      floatingActionButton: BlocBuilder<VoiceBloc, VoiceState>(
+        builder: (context, state) {
+          return FloatingActionButton(
+            onPressed:
+                // If not yet listening for speech start, otherwise stop
+                _speechToText.isNotListening
+                    ? () async {
+                        await _speechToText.listen(
+                            onResult: (SpeechRecognitionResult result) {
+                              setState(() {
+                                _lastWords = result.recognizedWords;
+                              });
+                              context.read<VoiceBloc>().add(UpdateMessage(result.recognizedWords));
+                            },
+                            listenFor: Duration(
+                              seconds: 10,
+                            ));
+                        setState(
+                          () {},
+                        );
+                      }
+                    : _stopListening,
+            tooltip: 'Listen',
+            child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+          );
+        },
       ),
     );
   }

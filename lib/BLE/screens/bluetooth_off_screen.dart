@@ -31,7 +31,7 @@ class BluetoothOffScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: ElevatedButton(
-        child: const Text('TURN ON'),
+        child: const Text('BẬT BLUETOOTH'),
         onPressed: () async {
           try {
             if (Platform.isAndroid) {
