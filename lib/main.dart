@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 
 import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
+import 'package:SmartMicro.Mobile/screens/login_screen.dart';
 import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
+import 'package:SmartMicro.Mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -92,12 +94,14 @@ class _AppState extends State<App> {
         colorScheme: colorSelectionMethod == ColorSelectionMethod.image ? imageColorScheme : null,
         useMaterial3: useMaterial3,
         brightness: Brightness.light,
+        fontFamily: 'MadimiOne' 
       ),
       darkTheme: ThemeData(
         colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed ? colorSelected.color : imageColorScheme!.primary,
         useMaterial3: useMaterial3,
         brightness: Brightness.dark,
       ),
+      
       // home: Home(
       //   useLightMode: useLightMode,
       //   useMaterial3: useMaterial3,
@@ -109,7 +113,9 @@ class _AppState extends State<App> {
       //   handleImageSelect: handleImageSelect,
       //   colorSelectionMethod: colorSelectionMethod,
       // ),
-      home: NavigatorBar(),
+      // home: NavigatorBar(),
+      // home: LoginScreen(),
+      home: WelcomeScreen(),
       navigatorObservers: [BluetoothAdapterStateObserver()],
     );
   }

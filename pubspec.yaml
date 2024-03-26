@@ -33,6 +33,7 @@ dependencies:
   widgetbook_annotation: ^3.1.0
   flutter_bloc: ^8.1.4
   fl_chart: ^0.66.2
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -47,4 +48,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    
+  fonts:
+    - family: MadimiOne
+      fonts:
+        - asset: assets/fonts/MadimiOne-Regular.ttf 

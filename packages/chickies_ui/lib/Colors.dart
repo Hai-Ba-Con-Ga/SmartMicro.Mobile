@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract final class ChickiesColor {
   static const Color purple = Color(0xFF7e7dd6);
+  static const Color purple2 = Color(0xFF7a79cf);
   static const Color grey = Color(0xFFeef2f9);
   static const Color shadow = Color.fromARGB(255, 211, 221, 238);
 

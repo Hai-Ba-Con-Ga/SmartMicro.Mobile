@@ -2,6 +2,7 @@ import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
 import 'package:SmartMicro.Mobile/BLE/screens/scan_screen.dart';
 import 'package:SmartMicro.Mobile/screens/chart_screen.dart';
 import 'package:SmartMicro.Mobile/screens/home_screen.dart';
+import 'package:SmartMicro.Mobile/screens/user_screen.dart';
 import 'package:SmartMicro.Mobile/screens/voice/test_speech_to_text_screen.dart';
 import 'package:SmartMicro.Mobile/screens/voice/voice_widget.dart';
 import 'package:chickies_ui/Colors.dart';
@@ -66,8 +67,8 @@ class _NavigatorBarState extends State<NavigatorBar> {
                 FlutterBlueApp(),
                 // ScanScreen(),
                ChartScreen(),
-                TestSpeechToTextScreen(),
-                // Container(color: appbarColor, child: Text('Home Page1')),
+               UserScreen(),
+                // TestSpeechToTextScreen(),
               ],
             ),
             //* Bottom Navigator App Bar

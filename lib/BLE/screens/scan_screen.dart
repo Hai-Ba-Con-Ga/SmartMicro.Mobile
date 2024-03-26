@@ -164,6 +164,12 @@ class _ScanScreenState extends State<ScanScreen> {
         extendBodyBehindAppBar: true,
         backgroundColor: ChickiesColor.background,
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: ChickiesColor.background),
+            onPressed: () {
+              // Navigator.pop(context);
+            },
+          ),
           title: Image.asset(
             'assets/images/chickies_logo2.png',
             height: 80,
