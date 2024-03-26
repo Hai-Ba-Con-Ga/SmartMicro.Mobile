@@ -25,8 +25,8 @@ dependencies:
     path: packages/chickies_ui
     
   flutter_blue_plus: ^1.31.16
-  flutter_reactive_ble: ^5.3.1
-  location_permissions: ^4.0.1
+  # flutter_reactive_ble: ^5.3.1
+  # location_permissions: ^4.0.1
   speech_to_text: ^6.6.1
 
   widgetbook: ^3.7.1
