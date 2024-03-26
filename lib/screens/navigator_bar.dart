@@ -51,7 +51,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => VoiceBloc()..add(UpdateMessage("init")),
+      create: (context) => VoiceBloc()..add(UpdateMessage("Tap the microphone to start listening...")),
       child: Stack(
         children: [
           Scaffold(
@@ -112,7 +112,8 @@ class _NavigatorBarState extends State<NavigatorBar> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Container(
-        color: ChickiesColor.white,
+        color: Colors.transparent,
+        // width: 60,
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -128,7 +129,6 @@ class _NavigatorBarState extends State<NavigatorBar> {
     );
   }
 }
-
 class ChickiesDotButton extends StatelessWidget {
   const ChickiesDotButton({
     super.key,

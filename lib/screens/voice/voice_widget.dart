@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
@@ -6,8 +8,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
-class VoiceWidget extends StatelessWidget {
+class VoiceWidget extends StatefulWidget {
   const VoiceWidget({
     super.key,
     required this.isOpenVoice,
@@ -16,15 +20,65 @@ class VoiceWidget extends StatelessWidget {
   final bool isOpenVoice;
 
   @override
+  State<VoiceWidget> createState() => _VoiceWidgetState();
+}
+
+class _VoiceWidgetState extends State<VoiceWidget> {
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    print(_speechEnabled);
+    setState(() {});
+  }
+
+  // /// Each time to start a speech recognition session
+  // void _startListening
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  int _counter = 0;
+  void _startTimer() {
+    setState(() {
+      _counter = 5;
+    });
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_counter > 0) {
+          _counter--;
+        } else {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 300),
-      child: isOpenVoice
+      child: widget.isOpenVoice
           ? Container(
-            color: Colors.transparent,
-            height: 250,
-            child: Stack(
-              alignment: Alignment.topCenter,
+              color: Colors.transparent,
+              height: 250,
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
                   RoundedContainer(
                     margin: EdgeInsets.zero,
@@ -45,15 +99,36 @@ class VoiceWidget extends StatelessWidget {
                   ),
                   Positioned(
                     bottom: 20,
-                    child: ChickiesDotButton( child: 
-                    Icon(Icons.mic_sharp, color: Colors.white, size: 25)
-                     ,onPressed: () {
-                      context.read<VoiceBloc>().add(UpdateMessage("init"));
-                    }),
+                    child: ChickiesDotButton(
+                      child: Icon(_speechToText.isNotListening ? Icons.mic_off_sharp : Icons.mic_sharp, color: Colors.white, size: 25),
+                      onPressed:
+                          // () {
+                          //   context.read<VoiceBloc>().add(UpdateMessage("init"));
+                          // }
+                          // If not yet listening for speech start, otherwise stop
+                          _speechToText.isNotListening
+                              ? () async {
+                                  _startTimer();
+                                  await _speechToText.listen(
+                                      onResult: (SpeechRecognitionResult result) {
+                                        setState(() {
+                                          _lastWords = result.recognizedWords;
+                                        });
+                                        context.read<VoiceBloc>().add(UpdateMessage(result.recognizedWords));
+                                      },
+                                      listenFor: Duration(
+                                        seconds: 5,
+                                      ));
+                                  setState(
+                                    () {},
+                                  );
+                                }
+                              : _stopListening,
+                    ),
                   )
                 ],
               ),
-          )
+            )
           : SizedBox.shrink(),
       transitionBuilder: (Widget child, Animation<double> animation) {
         final inAnimation = Tween<Offset>(begin: Offset(0, 1.0), end: Offset(0.0, 0.0)).animate(animation);

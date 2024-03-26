@@ -165,7 +165,7 @@ class _ScanScreenState extends State<ScanScreen> {
         backgroundColor: ChickiesColor.background,
         appBar: AppBar(
           title: Image.asset(
-            'assets/images/chickies_logo.png',
+            'assets/images/chickies_logo2.png',
             height: 80,
           ),
           excludeHeaderSemantics: false,
