@@ -5,6 +5,10 @@ abstract final class ChickiesColor {
   static const Color grey = Color(0xFFeef2f9);
   static const Color shadow = Color.fromARGB(255, 211, 221, 238);
 
+  static const Color green = Color.fromARGB(255, 125, 214, 153);
+  static const Color pink = Color.fromARGB(255, 214, 125, 193);
+  static const Color blue = Color.fromARGB(255, 125, 177, 214);
+
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
 
