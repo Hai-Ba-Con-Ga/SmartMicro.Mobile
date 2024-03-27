@@ -1,4 +1,4 @@
-import 'package:SmartMicro.Mobile/BLE/flutter_blue_app.dart';
+import 'package:SmartMicro.Mobile/BLE/iot_screen.dart';
 import 'package:SmartMicro.Mobile/BLE/screens/scan_screen.dart';
 import 'package:SmartMicro.Mobile/screens/chart_screen.dart';
 import 'package:SmartMicro.Mobile/screens/home_screen.dart';
@@ -64,7 +64,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
               controller: _pageController,
               onPageChanged: _onPageChanged,
               children: <Widget>[
-                FlutterBlueApp(),
+                IotScreen(),
                 // ScanScreen(),
                ChartScreen(),
                UserScreen(),

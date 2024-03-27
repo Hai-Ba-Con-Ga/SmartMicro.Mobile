@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
+      //* Login Button
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),

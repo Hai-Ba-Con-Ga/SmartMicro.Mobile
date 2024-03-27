@@ -12,21 +12,21 @@ import 'screens/scan_screen.dart';
 
 void main() {
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
-  runApp(const FlutterBlueApp());
+  runApp(const IotScreen());
 }
 
 //
 // This widget shows BluetoothOffScreen or
 // ScanScreen depending on the adapter state
 //
-class FlutterBlueApp extends StatefulWidget {
-  const FlutterBlueApp({Key? key}) : super(key: key);
+class IotScreen extends StatefulWidget {
+  const IotScreen({Key? key}) : super(key: key);
 
   @override
-  State<FlutterBlueApp> createState() => _FlutterBlueAppState();
+  State<IotScreen> createState() => _IotScreenState();
 }
 
-class _FlutterBlueAppState extends State<FlutterBlueApp> {
+class _IotScreenState extends State<IotScreen> {
   BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
 
   late StreamSubscription<BluetoothAdapterState> _adapterStateStateSubscription;

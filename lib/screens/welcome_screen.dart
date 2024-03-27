@@ -28,6 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Text('Hi there, We are', style: TextStyle(fontSize: 20, color: ChickiesColor.background, fontWeight: FontWeight.bold)),
               Text('Smart Micro', style: TextStyle(fontSize: 40, color: ChickiesColor.background, fontWeight: FontWeight.bold)),
               Expanded(child: const SizedBox()),
+              //* Login Button
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ChickiesButton(
@@ -40,6 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         );
                       },
                       text: 'Continue with us')),
+              //* SignUp Button
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ChickiesButton(

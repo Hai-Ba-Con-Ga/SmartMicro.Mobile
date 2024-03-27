@@ -100,19 +100,19 @@ class _LineChart extends StatelessWidget {
     String text;
     switch (value.toInt()) {
       case 1:
-        text = '1m';
+        text = '10°';
         break;
       case 2:
-        text = '2m';
+        text = '20°';
         break;
       case 3:
-        text = '3m';
+        text = '30°';
         break;
       case 4:
-        text = '5m';
+        text = '40°';
         break;
       case 5:
-        text = '6m';
+        text = '50°';
         break;
       default:
         return Container();
@@ -136,13 +136,13 @@ class _LineChart extends StatelessWidget {
     Widget text;
     switch (value.toInt()) {
       case 2:
-        text = const Text('SEPT', style: style);
+        text = const Text('10:00', style: style);
         break;
       case 7:
-        text = const Text('OCT', style: style);
+        text = const Text('11:00', style: style);
         break;
       case 12:
-        text = const Text('DEC', style: style);
+        text = const Text('12:00', style: style);
         break;
       default:
         text = const Text('');
