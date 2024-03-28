@@ -22,6 +22,16 @@
         return prefs.getBool(key);
       }
 
+      static Future<bool> setInt(String key, int value) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        return prefs.setInt(key, value);
+      }
+
+      static Future<int?> getInt(String key) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        return prefs.getInt(key);
+      }
+
       static Future<bool> remove(String key) async {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         return prefs.remove(key);

@@ -108,4 +108,54 @@ class APIClient {
       throw Exception('Failed to load devices');
     }
   }
+
+  //* Get device by ownerId
+  Future<List<Device>> getDevicesByOwnerId(int userId) async {
+    final response = await http.get(
+      Uri.parse('$BASE_URL/device/owner/$userId'),
+      // headers: <String, String>{
+      //   'Authorization': 'Bearer'
+      //   '$token',
+      // },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body as String) as Map<String, dynamic>;
+      List<Device> list = (data['data'] as List<dynamic>).map((val) => Device.fromJson(val as Map<String, dynamic>)).toList();
+      return list;
+    } else {
+      throw Exception('Failed to load devices');
+    }
+  }
+
+  //* create device
+  Future<bool> createDevice(Device device) async {
+    final response = await http.post(
+      Uri.parse('$BASE_URL/device'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(device.toJson()),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //* delete device
+  Future<bool> deleteDevice(int deviceId) async {
+    final response = await http.delete(
+      Uri.parse('$BASE_URL/device/$deviceId'),
+      // headers: <String, String>{
+      //   'Authorization': 'Bearer'
+      //   '$token',
+      // },
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

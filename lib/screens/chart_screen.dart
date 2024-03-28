@@ -2,19 +2,18 @@ import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Button/button.dart';
 import 'package:chickies_ui/Components/Container/rounded_container.dart';
+import 'package:chickies_ui/chickies_ui.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData});
-
-  final bool isShowingMainData;
+class _TemperatureChart extends StatelessWidget {
+  const _TemperatureChart();
 
   @override
   Widget build(BuildContext context) {
     return LineChart(
-      isShowingMainData ? sampleData1 : sampleData2,
+      sampleData1,
       duration: const Duration(milliseconds: 250),
     );
   }
@@ -28,18 +27,6 @@ class _LineChart extends StatelessWidget {
         minX: 0,
         maxX: 14,
         maxY: 4,
-        minY: 0,
-      );
-
-  LineChartData get sampleData2 => LineChartData(
-        lineTouchData: lineTouchData2,
-        gridData: gridData,
-        titlesData: titlesData2,
-        borderData: borderData,
-        lineBarsData: lineBarsData2,
-        minX: 0,
-        maxX: 14,
-        maxY: 6,
         minY: 0,
       );
 
@@ -71,31 +58,6 @@ class _LineChart extends StatelessWidget {
         lineChartBarData1_3,
       ];
 
-  LineTouchData get lineTouchData2 => const LineTouchData(
-        enabled: false,
-      );
-
-  FlTitlesData get titlesData2 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
-
-  List<LineChartBarData> get lineBarsData2 => [
-        // lineChartBarData2_1,
-        // lineChartBarData2_2,
-        lineChartBarData2_3,
-      ];
-
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -105,19 +67,14 @@ class _LineChart extends StatelessWidget {
     switch (value.toInt()) {
       case 1:
         text = '10°';
-        break;
       case 2:
         text = '20°';
-        break;
       case 3:
         text = '30°';
-        break;
       case 4:
         text = '40°';
-        break;
       case 5:
         text = '50°';
-        break;
       default:
         return Container();
     }
@@ -179,44 +136,6 @@ class _LineChart extends StatelessWidget {
         ),
       );
 
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
-        color: ChickiesColor.green,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 1.5),
-          FlSpot(5, 1.4),
-          FlSpot(7, 3.4),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
-        isCurved: true,
-        color: ChickiesColor.pink,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: false,
-          color: ChickiesColor.pink.withOpacity(0),
-        ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
-
   LineChartBarData get lineChartBarData1_3 => LineChartBarData(
         isCurved: true,
         color: ChickiesColor.blue,
@@ -232,62 +151,6 @@ class _LineChart extends StatelessWidget {
           FlSpot(13, 2.5),
         ],
       );
-
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: ChickiesColor.green.withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 1.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
-        isCurved: true,
-        color: ChickiesColor.pink.withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true,
-          color: ChickiesColor.pink.withOpacity(0.2),
-        ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData2_3 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: ChickiesColor.blue.withOpacity(0.5),
-        barWidth: 2,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: true),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 3.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 5),
-          FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
-        ],
-      );
 }
 
 class ChartScreen extends StatefulWidget {
@@ -298,68 +161,25 @@ class ChartScreen extends StatefulWidget {
 }
 
 class ChartScreenState extends State<ChartScreen> {
-  late bool isShowingMainData;
-
-  @override
-  void initState() {
-    super.initState();
-    isShowingMainData = true;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.23,
-      child: Stack(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(
-                height: 37,
-              ),
-              const Text(
-                'NHIỆT ĐỘ',
-                style: TextStyle(
-                  color: ChickiesColor.primary,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 37,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16, left: 6),
-                  child: _LineChart(isShowingMainData: isShowingMainData),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ChickiesButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, 'test_widget');
-                },
-              ),
-            ],
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Colors.white.withOpacity(isShowingMainData ? 1.0 : 0.5),
+    return ChickiesTopBar(
+      tabs: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 30, left: 10, top: 10, bottom: 10),
+            child: AspectRatio(
+              aspectRatio: 1 / 1.5,
+              child: _TemperatureChart(),
             ),
-            onPressed: () {
-              setState(() {
-                isShowingMainData = !isShowingMainData;
-              });
-            },
-          )
-        ],
-      ),
+          ),
+        ),
+        Container(
+          child: Text("12313123123"),
+        ),
+      ],
+      titles: const ['NHIỆT ĐỘ', 'ÁNH SÁNG'],
+      title: 'CHART',
     );
   }
 }

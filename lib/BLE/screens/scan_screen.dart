@@ -178,24 +178,18 @@ class _ScanScreenState extends State<ScanScreen> {
         extendBodyBehindAppBar: true,
         backgroundColor: ChickiesColor.background,
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: ChickiesColor.background),
-            onPressed: () {
-              // Navigator.pop(context);
-            },
-          ),
-          leadingWidth: 0,
-          title: Text("Find Devices", style: TextStyle(color: ChickiesColor.primary, fontSize: 30)),
-          // Image.asset(
-          //   'assets/images/chickies_logo2.png',
-          //   height: 80,
-          // ),
-          excludeHeaderSemantics: false,
-          // toolbarHeight: 90,
-          // centerTitle: true,
-          backgroundColor: Colors.transparent,
-          foregroundColor: ChickiesColor.primary,
+          backgroundColor: ChickiesColor.background,
           elevation: 0,
+          toolbarHeight: 50,
+          title: Text(
+            "FIND DEVICE",
+            style: TextStyle(
+              color: ChickiesColor.grey2,
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          centerTitle: true,
         ),
         body: RefreshIndicator(
           onRefresh: onRefresh,

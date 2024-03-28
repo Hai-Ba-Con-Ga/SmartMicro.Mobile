@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     print(response);
     await SharedPrefs.setString('access_token', response['accessToken'] as String);
-    await SharedPrefs.setString('userId', (response['accountId'] as int).toString());
+    await SharedPrefs.setInt('userId', (response['accountId'] as int));
     await SharedPrefs.setString('username', emailController.text);
 
     await Navigator.pushAndRemoveUntil(

@@ -103,8 +103,8 @@ class _NavigatorBarState extends State<NavigatorBar> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      AppBarButton(index: 0, icon: const Icon(Icons.home)),
-                      AppBarButton(index: 1, icon: const Icon(Icons.school)),
+                      AppBarButton(index: 0, icon: const Icon(Icons.device_hub)),
+                      AppBarButton(index: 1, icon: const Icon(Icons.bar_chart)),
                       AppBarButton(index: 2, icon: const Icon(Icons.person)),
                       const SizedBox(width: 50),
                     ],

@@ -37,8 +37,7 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {
       username = res.split('@').first;
     });
-
-    final response = await APIClient().getDevices();
+    final response = await APIClient().getDevicesByOwnerId(await SharedPrefs.getInt('userId') ?? 0);
     if (response.isNotEmpty) {
       setState(() {
         devices = response;
@@ -120,12 +119,60 @@ class _UserScreenState extends State<UserScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              Container(width:double.infinity, margin: const EdgeInsets.only(left: 20) ,child: Text("Devices", style: TextStyle(fontSize: 25, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left)),
+              Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Text("Devices", style: TextStyle(fontSize: 25, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left)),
               ...List.generate(
                 devices.length,
-                (index) => RoundedContainer(
-                  width: double.infinity,
-                  // height: 60,
+                (index) => CardSwipe(
+                  height: 120,
+                  width: 60,
+                  onPressed: () {
+                    print('delete');
+                  },
+                  child: RoundedContainer(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 100,
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 90,
+                          height: 90,
+                          margin: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: ChickiesColor.primary.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(child: Icon(Icons.devices_other_sharp, size: 30, color: ChickiesColor.black.withOpacity(0.3))),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(devices[index].serialId.toString(),
+                                style: TextStyle(fontSize: 20, color: ChickiesColor.grey2), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                            Text(devices[index].deviceName.toString(),
+                                style: TextStyle(fontSize: 20, color: ChickiesColor.grey2), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                            Text("Create: " + DateFormat('hh:mm - yy/MM/dd').format(devices[index].createdDate ?? DateTime.now()),
+                                style: TextStyle(fontSize: 15, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              //* button create device
+              GestureDetector(
+                onTap: () async {
+                  await createDevice('-123123', 'BLE');
+                },
+                child: RoundedContainer(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: 70,
                   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -138,13 +185,13 @@ class _UserScreenState extends State<UserScreen> {
                           color: ChickiesColor.primary.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Center(child: Icon(Icons.devices_other_sharp, size: 30, color: ChickiesColor.black.withOpacity(0.3))),
+                        child: Center(child: Icon(Icons.add, size: 30, color: ChickiesColor.black.withOpacity(0.3))),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(devices[index].serialId.toString(), style: TextStyle(fontSize: 20, color: ChickiesColor.grey2), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
-                          Text("Create: "+DateFormat('yyyy-MM-dd').format(devices[index].createdDate ?? DateTime.now()), style: TextStyle(fontSize: 15, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                          Text("Create new device", style: TextStyle(fontSize: 20, color: ChickiesColor.grey2), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                          Text("Create new device", style: TextStyle(fontSize: 15, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
                         ],
                       ),
                     ],
@@ -156,5 +203,63 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ),
     );
+  }
+
+  Future createDevice(String serialId, String deviceName) async {
+    print('create new device');
+
+    final newDevices = await APIClient().getDevicesByOwnerId(await SharedPrefs.getInt('userId') ?? 0);
+    final isExist = newDevices.any((element) => element.serialId == serialId);
+
+    if (isExist) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Device already exist'),
+          content: Text('This device already exist in your account'),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+        ),
+      );
+      return;
+    }
+
+    final userId = await SharedPrefs.getInt('userId');
+    final response = await APIClient().createDevice(Device(
+      serialId: serialId,
+      ownerId: userId,
+      deviceTypeId: 2,
+      deviceName: 'Device 1',
+      createdDate: DateTime.now(),
+    ));
+    if (response) {
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Create new device'),
+          content: Text('Create new device success'),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+        ),
+      );
+
+      final res = await APIClient().getDevices();
+      if (res.isNotEmpty) {
+        setState(() {
+          devices = res;
+        });
+      }
+    }
+  }
+
+  Future deleteDevice(int id) async {
+    final response = await APIClient().deleteDevice(id);
+    if (response) {
+      final res = await APIClient().getDevices();
+      if (res.isNotEmpty) {
+        setState(() {
+          devices = res;
+        });
+      }
+    }
   }
 }
