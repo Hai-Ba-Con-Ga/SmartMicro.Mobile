@@ -15,8 +15,10 @@ import '../utils/extra.dart';
 
 class DeviceControlScreen extends StatefulWidget {
   final BluetoothDevice device;
+  final BluetoothCharacteristic rxChar;
+  final BluetoothCharacteristic txChar;
 
-  const DeviceControlScreen({Key? key, required this.device}) : super(key: key);
+  const DeviceControlScreen({Key? key, required this.device, required this.rxChar, required this.txChar}) : super(key: key);
 
   @override
   State<DeviceControlScreen> createState() => _DeviceControlScreenState();
@@ -32,10 +34,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
   late StreamSubscription<bool> _isConnectingSubscription;
   late StreamSubscription<bool> _isDisconnectingSubscription;
 
-  BluetoothService? _uartService;
-  BluetoothCharacteristic? _rxChar;
-  BluetoothCharacteristic? _txChar;
-
   List<int> _rawSerial = [];
   late StreamSubscription<List<int>> _lastValueSubscription;
 
@@ -50,12 +48,8 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       if (state == BluetoothConnectionState.connected) {
         //* init done
         print("on init...");
-        _services = []; // must rediscover services
         _services = await widget.device.discoverServices();
-        _uartService = _services.firstWhereOrNull((element) => element.uuid.toString().toUpperCase() == BleUUID.UART_SERVICE_UUID);
-        _rxChar = _uartService!.characteristics.firstWhereOrNull((c) => c.uuid.toString().toUpperCase() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID);
-        _txChar = _uartService!.characteristics.firstWhereOrNull((c) => c.uuid.toString().toUpperCase() == BleUUID.TX_CHARACTERISTIC_CHARACTERISTIC_UUID);
-        await _txChar!.setNotifyValue(true);
+        await widget.txChar.setNotifyValue(true);
         print("init done <3");
       }
       if (mounted) {
@@ -77,7 +71,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       }
     });
 
-    _lastValueSubscription = _txChar!.lastValueStream.listen((value) {
+    _lastValueSubscription = widget.txChar.lastValueStream.listen((value) {
       _rawSerial = value;
       if (mounted) {
         setState(() {});
@@ -142,18 +136,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
   }
 
   Widget _uartServiceTiles(BuildContext context, BluetoothDevice d) {
-    if (_uartService == null) {
-      return Container(child: Text("UART Service not found:"));
-    }
-
-    if (_rxChar == null) {
-      return Container(child: Text("UART RxChar not found"));
-    }
-
-    if (_txChar == null) {
-      return Container(child: Text("UART TxChar not found"));
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -161,12 +143,12 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
           children: [
             //* Open Button
             GestureDetector(
-              onTap: () => onWritePressed(_rxChar!, message: BleData().mapping(MessageData.open)),
+              onTap: () => onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.open)),
               child: RoundedContainer(width: 100, height: 50, child: Center(child: Text("Open", style: TextStyle(fontSize: 20)))),
             ),
             //* Close Button
             GestureDetector(
-              onTap: () => onWritePressed(_rxChar!, message: BleData().mapping(MessageData.close)),
+              onTap: () => onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.close)),
               child: RoundedContainer(width: 100, height: 50, child: Text("Close", style: TextStyle(fontSize: 20))),
             ),
           ],
@@ -175,12 +157,12 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
           children: [
             //* On Button
             GestureDetector(
-              onTap: () => onWritePressed(_rxChar!, message: BleData().mapping(MessageData.on)),
+              onTap: () => onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.on)),
               child: RoundedContainer(width: 100, height: 50, child: Text("On", style: TextStyle(fontSize: 20))),
             ),
             //* Off Button
             GestureDetector(
-              onTap: () => onWritePressed(_rxChar!, message: BleData().mapping(MessageData.off)),
+              onTap: () => onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.off)),
               child: RoundedContainer(width: 100, height: 50, child: Text("Off", style: TextStyle(fontSize: 20))),
             ),
           ],
@@ -188,14 +170,14 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         //* Get Serial Button
         GestureDetector(
           onTap: () async => {
-            await onWritePressed(_rxChar!, message: BleData().mapping(MessageData.serial)),
+            await onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.serial)),
           },
           child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Send Serial#", style: TextStyle(fontSize: 20)))),
         ),
         GestureDetector(
           onTap: () async => {
-            await onReadPressed(_txChar!),
-            await onReadPressed(_rxChar!),
+            await onReadPressed(widget.txChar),
+            await onReadPressed(widget.rxChar),
           },
           child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Serial: " + BleData().bytesToString(_rawSerial), style: TextStyle(fontSize: 20)))),
         ),

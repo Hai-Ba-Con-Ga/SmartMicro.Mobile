@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:SmartMicro.Mobile/BLE/constants.dart';
 import 'package:SmartMicro.Mobile/BLE/screens/device_control_screen.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Button/button.dart';
@@ -82,11 +83,21 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   //* on CONNECT <-
-  void onConnectPressed(BluetoothDevice device) {
-    device.connectAndUpdateStream().catchError((e) {
+  Future<void> onConnectPressed(BluetoothDevice device) async {
+    await device.connectAndUpdateStream().catchError((e) {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e), success: false);
     });
-    MaterialPageRoute route = MaterialPageRoute(builder: (context) => DeviceControlScreen(device: device), settings: RouteSettings(name: '/DeviceControlScreen'));
+    final _services = await device.discoverServices();
+    final _uartService = _services.firstWhere((element) => element.uuid.toString().toUpperCase() == BleUUID.UART_SERVICE_UUID);
+    final _rxChar = _uartService.characteristics.firstWhere((c) => c.uuid.toString().toUpperCase() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID);
+    final _txChar = _uartService.characteristics.firstWhere((c) => c.uuid.toString().toUpperCase() == BleUUID.TX_CHARACTERISTIC_CHARACTERISTIC_UUID);
+    MaterialPageRoute route = MaterialPageRoute(
+        builder: (context) => DeviceControlScreen(
+              device: device,
+              rxChar: _rxChar,
+              txChar: _txChar,
+            ),
+        settings: RouteSettings(name: '/DeviceControlScreen'));
     Navigator.of(context).push(route);
   }
 
@@ -126,22 +137,22 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   //* List of System Devices
-  List<Widget> _buildSystemDeviceTiles(BuildContext context) {
-    return _systemDevices
-        .map(
-          (d) => SystemDeviceTile(
-            device: d,
-            onOpen: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DeviceControlScreen(device: d),
-                settings: RouteSettings(name: '/DeviceControlScreen'),
-              ),
-            ),
-            onConnect: () => onConnectPressed(d),
-          ),
-        )
-        .toList();
-  }
+  // List<Widget> _buildSystemDeviceTiles(BuildContext context) {
+  //   return _systemDevices
+  //       .map(
+  //         (d) => SystemDeviceTile(
+  //           device: d,
+  //           onOpen: () => Navigator.of(context).push(
+  //             MaterialPageRoute(
+  //               builder: (context) => DeviceControlScreen(device: d),
+  //               settings: RouteSettings(name: '/DeviceControlScreen'),
+  //             ),
+  //           ),
+  //           onConnect: () => onConnectPressed(d),
+  //         ),
+  //       )
+  //       .toList();
+  // }
 
   //* List of Scan Results
   List<Widget> _buildScanResultTiles(BuildContext context) {
@@ -188,7 +199,7 @@ class _ScanScreenState extends State<ScanScreen> {
           child: ListView(
             children: <Widget>[
               // buildScanButton(context),
-              ..._buildSystemDeviceTiles(context),
+              // ..._buildSystemDeviceTiles(context),
               ..._buildScanResultTiles(context),
             ],
           ),
