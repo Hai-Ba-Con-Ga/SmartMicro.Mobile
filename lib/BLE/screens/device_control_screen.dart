@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:SmartMicro.Mobile/BLE/constants.dart';
 import 'package:chickies_ui/Colors.dart';
+import 'package:chickies_ui/Components/Container/rounded_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
@@ -122,22 +123,6 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         .toList();
   }
 
-  Future onWritePressed(BluetoothCharacteristic char, {String? message}) async {
-    print(message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message));
-    try {
-      await char.write(
-        message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message),
-        withoutResponse: char.properties.writeWithoutResponse,
-      );
-      Snackbar.show(ABC.c, "Write: Success", success: true);
-      if (char.properties.read) {
-        await char.read();
-      }
-    } catch (e) {
-      Snackbar.show(ABC.c, prettyException("Write Error:", e), success: false);
-    }
-  }
-
   Widget _uartServiceTiles(BuildContext context, BluetoothDevice d) {
     _uartService = _services.firstWhereOrNull((element) => element.uuid.toString().toUpperCase() == BleUUID.UART_SERVICE_UUID);
     //test
@@ -161,21 +146,45 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       return Container(child: Text("UART RxChar not found"));
     }
 
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
+        Row(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.open))}, child: Text("Open")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.close))}, child: Text("Close")),
+            //* Open Button
+            GestureDetector(
+              onTap: () => onWritePressed(rxChar, message: BleData().mapping(MessageData.open)),
+              child: RoundedContainer(width: 100, height: 50, child: Center(child: Text("Open", style: TextStyle(fontSize: 20)))),
+            ),
+            //* Close Button
+            GestureDetector(
+              onTap: () => onWritePressed(rxChar, message: BleData().mapping(MessageData.close)),
+              child: RoundedContainer(width: 100, height: 50, child: Text("Close", style: TextStyle(fontSize: 20))),
+            ),
           ],
         ),
-        Column(
+        Row(
           children: [
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.on))}, child: Text("on")),
-            ElevatedButton(onPressed: () => {onWritePressed(rxChar, message: BleData().mapping(MessageData.off))}, child: Text("off")),
+            //* On Button
+            GestureDetector(
+              onTap: () => onWritePressed(rxChar, message: BleData().mapping(MessageData.on)),
+              child: RoundedContainer(width: 100, height: 50, child: Text("On", style: TextStyle(fontSize: 20))),
+            ),
+            //* Off Button
+            GestureDetector(
+              onTap: () => onWritePressed(rxChar, message: BleData().mapping(MessageData.off)),
+              child: RoundedContainer(width: 100, height: 50, child: Text("Off", style: TextStyle(fontSize: 20))),
+            ),
           ],
-        )
+        ),
+        //* Get Serial Button
+        GestureDetector(
+          onTap: () async => {
+            await onWritePressed(rxChar, message: BleData().mapping(MessageData.serial)),
+            await onReadPressed(rxChar),
+          },
+          child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Get Serial", style: TextStyle(fontSize: 20)))),
+        ),
       ],
     );
   }
@@ -234,13 +243,41 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
             child: Column(
               children: <Widget>[
                 buildRemoteId(context),
-                ..._buildServiceTiles(context, widget.device),
                 _uartServiceTiles(context, widget.device),
+                ..._buildServiceTiles(context, widget.device),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  //* On Read
+  Future onReadPressed(BluetoothCharacteristic char) async {
+    try {
+      final raw = await char.read();
+      final value = BleData().bytesToString(raw);
+      Snackbar.show(ABC.c, "Read: Success - Data: $value", success: true);
+    } catch (e) {
+      Snackbar.show(ABC.c, prettyException("Read Error:", e), success: false);
+    }
+  }
+
+  //* On Write
+  Future onWritePressed(BluetoothCharacteristic char, {String? message}) async {
+    print(message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message));
+    try {
+      await char.write(
+        message == null ? BleData().getRandomBytes() : BleData().stringToBytes(message),
+        withoutResponse: char.properties.writeWithoutResponse,
+      );
+      Snackbar.show(ABC.c, "Write: Success", success: true);
+      if (char.properties.read) {
+        await char.read();
+      }
+    } catch (e) {
+      Snackbar.show(ABC.c, prettyException("Write Error:", e), success: false);
+    }
   }
 }

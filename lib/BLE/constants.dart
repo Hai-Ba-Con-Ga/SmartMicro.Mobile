@@ -24,6 +24,7 @@ class BleData {
   static const String OFF = "off#";
   static const String OPEN = "open#";
   static const String CLOSE = "close#";
+  static const String SERIAL = "serial#";
 
   String mapping(MessageData data) {
     switch (data) {
@@ -59,4 +60,4 @@ class BleData {
   }
 }
 
-enum MessageData { on, off, close, open }
+enum MessageData { on, off, close, open, serial}

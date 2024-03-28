@@ -21,6 +21,7 @@ class _UserScreenState extends State<UserScreen> {
       backgroundColor: ChickiesColor.background,
       body: Column(
         children: [
+          SizedBox(height: 40),
           Row(
             // mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.end,
