@@ -137,12 +137,20 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
       (c) => c.uuid.toString().toUpperCase() == BleUUID.RX_CHARACTERISTIC_CHARACTERISTIC_UUID,
     );
 
+    BluetoothCharacteristic? txChar = _uartService!.characteristics.firstWhereOrNull(
+      (c) => c.uuid.toString().toUpperCase() == BleUUID.TX_CHARACTERISTIC_CHARACTERISTIC_UUID,
+    );
+
     //test
     // if (_services.isNotEmpty) {
     //   rxChar = _uartService!.characteristics.first;
     // }
 
     if (rxChar == null) {
+      return Container(child: Text("UART RxChar not found"));
+    }
+
+    if (txChar == null) {
       return Container(child: Text("UART RxChar not found"));
     }
 
@@ -181,7 +189,12 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         GestureDetector(
           onTap: () async => {
             await onWritePressed(rxChar, message: BleData().mapping(MessageData.serial)),
-            await onReadPressed(rxChar),
+          },
+          child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Send Serial#", style: TextStyle(fontSize: 20)))),
+        ),
+                GestureDetector(
+          onTap: () async => {
+            await onReadPressed(txChar),
           },
           child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Get Serial", style: TextStyle(fontSize: 20)))),
         ),
