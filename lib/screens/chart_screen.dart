@@ -1,3 +1,4 @@
+import 'package:SmartMicro.Mobile/api/test_hub.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Button/button.dart';
@@ -174,9 +175,7 @@ class ChartScreenState extends State<ChartScreen> {
             ),
           ),
         ),
-        Container(
-          child: Text("12313123123"),
-        ),
+        TestHub(),
       ],
       titles: const ['NHIỆT ĐỘ', 'ÁNH SÁNG'],
       title: 'CHART',
