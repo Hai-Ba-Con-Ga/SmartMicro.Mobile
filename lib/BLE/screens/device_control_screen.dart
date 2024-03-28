@@ -178,8 +178,9 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         ),
         GestureDetector(
           onTap: () async => {
-            await onReadPressed(widget.txChar),
-            await onReadPressed(widget.rxChar),
+            //* add device
+            // await onReadPressed(widget.txChar),
+            // await onReadPressed(widget.rxChar),
           },
           child: RoundedContainer(width: 200, height: 50, child: Center(child: Text("Serial: " + BleData().bytesToString(_rawSerial), style: TextStyle(fontSize: 20)))),
         ),

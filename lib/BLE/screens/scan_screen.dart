@@ -98,7 +98,10 @@ class _ScanScreenState extends State<ScanScreen> {
               txChar: _txChar,
             ),
         settings: RouteSettings(name: '/DeviceControlScreen'));
-    Navigator.of(context).push(route);
+    // Navigator.of(context).push(route);
+
+    final object = {'device': device, 'rxChar': _rxChar, 'txChar': _txChar};
+    Navigator.of(context).pushNamed('/DeviceControlScreen', arguments: object);
   }
 
   //* on REFRESH

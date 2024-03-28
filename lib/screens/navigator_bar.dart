@@ -1,5 +1,7 @@
 import 'package:SmartMicro.Mobile/BLE/iot_screen.dart';
+import 'package:SmartMicro.Mobile/BLE/screens/device_control_screen.dart';
 import 'package:SmartMicro.Mobile/BLE/screens/scan_screen.dart';
+import 'package:SmartMicro.Mobile/data/device.dart';
 import 'package:SmartMicro.Mobile/screens/chart_screen.dart';
 import 'package:SmartMicro.Mobile/screens/home_screen.dart';
 import 'package:SmartMicro.Mobile/screens/user_screen.dart';
@@ -12,11 +14,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'voice/bloc/voice_bloc.dart';
 
 class NavigatorBar extends StatefulWidget {
-  
   const NavigatorBar({super.key});
   @override
   _NavigatorBarState createState() => _NavigatorBarState();
@@ -67,19 +69,24 @@ class _NavigatorBarState extends State<NavigatorBar> {
               controller: _pageController,
               onPageChanged: _onPageChanged,
               children: <Widget>[
-                IotScreen(),
-                // ScanScreen(),
-                // ChartScreen(),
+                // IotScreen(),
                 Navigator(
                   onGenerateRoute: (settings) {
-                    Widget page1 = ChartScreen();
-                    if (settings.name == 'test_widget') {
-                      return MaterialPageRoute(builder: (context) => TestWidget());
+                    Widget page1 = IotScreen();
+                    if (settings.name == '/DeviceControlScreen') {
+                      final object = settings.arguments as Map<String, dynamic>;
+                      return MaterialPageRoute(
+                          builder: (context) => DeviceControlScreen(
+                                device: object['device'] as BluetoothDevice,
+                                rxChar: object['rxChar'] as BluetoothCharacteristic,
+                                txChar: object['txChar'] as BluetoothCharacteristic,
+                              ));
                     }
-                      return MaterialPageRoute(builder: (context) => page1);
+                    return MaterialPageRoute(builder: (context) => page1);
                   },
                 ),
-                 UserScreen(),
+                ChartScreen(),
+                UserScreen(),
                 // TestSpeechToTextScreen(),
               ],
             ),
