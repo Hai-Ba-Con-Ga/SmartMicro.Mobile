@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
       email: emailController.text,
       password: passwordController.text,
     ));
-    if (response.isEmpty) {
+    if (response == null) {
       await showDialog(
         context: context,
         builder: (context) {
@@ -150,7 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     print(response);
-    await SharedPrefs.setString('access_token', response);
+    await SharedPrefs.setString('access_token', response['accessToken'] as String);
+    await SharedPrefs.setString('userId', (response['accountId'] as int).toString());
     await SharedPrefs.setString('username', emailController.text);
 
     await Navigator.pushAndRemoveUntil(

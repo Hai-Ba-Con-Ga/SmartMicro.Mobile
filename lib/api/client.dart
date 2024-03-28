@@ -36,7 +36,7 @@ class APIClient {
   }
 
   //* Login with email and password
-  Future<String> login(Account account) async {
+  Future<Map<String, dynamic>?> login(Account account) async {
     final response = await http.post(
       Uri.parse('$BASE_URL/auth/login'),
       headers: <String, String>{
@@ -50,9 +50,9 @@ class APIClient {
     if (response.statusCode == 200) {
       print(response.body);
       final data = json.decode(response.body as String) as Map<String, dynamic>;
-      return data['data'] as String;
+      return data['data'] as Map<String, dynamic>;
     } else {
-      return '';
+      return null;
     }
   }
 
