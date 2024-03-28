@@ -107,6 +107,7 @@ class _ScanScreenState extends State<ScanScreen> {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         child: ChickiesButton(
+          backgroundColor: ChickiesColor.blue,
           text: 'Scanning...',
           onPressed: onStopPressed,
           // style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),

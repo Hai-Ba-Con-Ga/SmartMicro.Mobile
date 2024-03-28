@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:SmartMicro.Mobile/api/client_chatgpt.dart';
 import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
@@ -53,19 +54,27 @@ class _VoiceWidgetState extends State<VoiceWidget> {
     setState(() {});
   }
 
+  void _callChatGPT() async {
+    context.read<VoiceBloc>().add(UpdateMessage('loading...'));
+    final response = await APIClientChatGPT().fetchData(_lastWords);
+    context.read<VoiceBloc>().add(UpdateMessage(response['choices'][0]['message']['content'] as String));
+  }
+
   int _counter = 0;
   void _startTimer() {
     setState(() {
       _counter = 5;
     });
     Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_counter > 0) {
-          _counter--;
-        } else {
-          timer.cancel();
-        }
-      });
+      if (_counter >= 0) {
+        _counter--;
+      } else {
+        setState(() {
+          _counter = 0;
+        });
+        timer.cancel();
+        _callChatGPT();
+      }
     });
   }
 

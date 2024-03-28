@@ -8,6 +8,8 @@ import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:SmartMicro.Mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 import 'material3_demo/constants.dart';
 
@@ -30,7 +32,8 @@ void main() async {
   // });
   WidgetsFlutterBinding.ensureInitialized();
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
-
+  await dotenv.load(fileName: '.env');
+  
   runApp(
     const App(),
   );
