@@ -1,6 +1,10 @@
+import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
+import 'package:chickies_ui/Components/Button/button.dart';
+import 'package:chickies_ui/Components/Container/rounded_container.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class _LineChart extends StatelessWidget {
   const _LineChart({required this.isShowingMainData});
@@ -335,6 +339,11 @@ class ChartScreenState extends State<ChartScreen> {
               ),
               const SizedBox(
                 height: 10,
+              ),
+              ChickiesButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, 'test_widget');
+                },
               ),
             ],
           ),

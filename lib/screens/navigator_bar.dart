@@ -67,20 +67,17 @@ class _NavigatorBarState extends State<NavigatorBar> {
               children: <Widget>[
                 IotScreen(),
                 // ScanScreen(),
-                ChartScreen(),
-                //  UserScreen(),
+                // ChartScreen(),
                 Navigator(
                   onGenerateRoute: (settings) {
-                    Widget page1 = UserScreen();
-                    if (settings.name == 'user_screen') {
-                      return MaterialPageRoute(builder: (context) => page1);
-                    }
+                    Widget page1 = ChartScreen();
                     if (settings.name == 'test_widget') {
                       return MaterialPageRoute(builder: (context) => TestWidget());
                     }
                       return MaterialPageRoute(builder: (context) => page1);
                   },
                 ),
+                 UserScreen(),
                 // TestSpeechToTextScreen(),
               ],
             ),

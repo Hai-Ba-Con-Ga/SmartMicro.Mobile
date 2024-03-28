@@ -26,7 +26,7 @@ class VoiceWidget extends StatefulWidget {
 }
 
 class _VoiceWidgetState extends State<VoiceWidget> {
-  static const EXPIRE_TIME = 5;
+  static const EXPIRE_TIME = 4;
   // TextToSpeech tts = TextToSpeech();
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
@@ -46,6 +46,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
 
   void _stopListening() async {
     await _speechToText.stop();
+    _counter = -1;
     setState(() {});
   }
 

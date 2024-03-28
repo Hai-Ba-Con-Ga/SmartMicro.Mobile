@@ -1,3 +1,4 @@
+import 'package:SmartMicro.Mobile/api/shared_prefs.dart';
 import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:SmartMicro.Mobile/screens/voice/test_widget.dart';
@@ -18,6 +19,21 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  String username = 'Username';
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  Future _init() async {
+    final res = await SharedPrefs.getString('username') ?? 'Username';
+    setState(() {
+      username = res.split('@').first;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,9 +82,11 @@ class _UserScreenState extends State<UserScreen> {
                               child: IntrinsicWidth(
                                   child: IconButton(
                                       onPressed: () {
-                                        Navigator.push(
+                                        SharedPrefs.clear();
+                                        Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                          (route) => false,
                                         );
                                       },
                                       icon: Icon(Icons.exit_to_app))),
@@ -78,7 +96,7 @@ class _UserScreenState extends State<UserScreen> {
                           ],
                         ),
                       ),
-                      Text("Username", style: TextStyle(fontSize: 25, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
+                      Text(username, style: TextStyle(fontSize: 25, color: ChickiesColor.black), overflow: TextOverflow.ellipsis, maxLines: 3, textAlign: TextAlign.left),
                     ],
                   ),
                 ),
@@ -97,20 +115,6 @@ class _UserScreenState extends State<UserScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(""),
             ),
-            ChickiesButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'test_widget');
-              },
-
-            ),
-            BlocBuilder<VoiceBloc, VoiceState>(builder: (context, state) {
-              return RoundedContainer(
-                width: double.infinity,
-                height: 200,
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(state.message, style: TextStyle(color: ChickiesColor.primary, decoration: TextDecoration.none, fontSize: 20)),
-              );
-            }),
           ],
         ),
       ),
