@@ -36,6 +36,8 @@ class BleData {
         return OPEN;
       case MessageData.close:
         return CLOSE;
+      case MessageData.serial:
+        return SERIAL;
       default:
         return "";
     }

@@ -48,8 +48,9 @@ class _DescriptorTileState extends State<DescriptorTile> {
   Future onReadPressed() async {
     try {
       final raw = await d.read();
+      final raw1 = d.lastValue;
       final value = BleData().bytesToString(raw);
-      Snackbar.show(ABC.c, "Descriptor Read : $value", success: true);
+      Snackbar.show(ABC.c, "Descriptor Read : $raw + $raw1", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Descriptor Read Error:", e), success: false);
     }
