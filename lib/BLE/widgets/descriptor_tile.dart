@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:SmartMicro.Mobile/BLE/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -46,8 +47,9 @@ class _DescriptorTileState extends State<DescriptorTile> {
 
   Future onReadPressed() async {
     try {
-      await d.read();
-      Snackbar.show(ABC.c, "Descriptor Read : Success", success: true);
+      final raw = await d.read();
+      final value = BleData().bytesToString(raw);
+      Snackbar.show(ABC.c, "Descriptor Read : $value", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Descriptor Read Error:", e), success: false);
     }
