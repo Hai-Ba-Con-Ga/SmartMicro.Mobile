@@ -36,7 +36,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
   late StreamSubscription<bool> _isConnectingSubscription;
   late StreamSubscription<bool> _isDisconnectingSubscription;
 
-  List<int> _rawSerial = [];
+  List<int> _rawSerial = [95, 95, 95, 95];
   late StreamSubscription<List<int>> _lastValueSubscription;
 
   //* init state
@@ -243,7 +243,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
               children: <Widget>[
                 buildRemoteId(context),
                 _uartServiceTiles(context, widget.device),
-                ..._buildServiceTiles(context, widget.device),
+                // ..._buildServiceTiles(context, widget.device),
                 _callByVoice(),
               ],
             ),
@@ -255,10 +255,26 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
 
   BlocListener<VoiceBloc, VoiceState> _callByVoice() {
     return BlocListener<VoiceBloc, VoiceState>(
-        listenWhen: (previous, current) => current.message != previous.message && current.message.isNotEmpty && current.message.characters.last == '#',
-        listener: (context, state) {
-          onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.serial) + state.message.substring(0, state.message.length - 1));
-        });
+      listenWhen: (previous, current) => current.message != previous.message && current.message.isNotEmpty && current.message.characters.last == '#',
+      listener: (context, state) {
+        // BlocProvider.of<VoiceBloc>(context).add(UpdateMessage("Call Successful"));
+        switch (state.message) {
+          case "open#":
+            onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.open));
+          case "close#":
+            onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.close));
+          case "on#":
+            onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.on));
+          case "off#":
+            onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.off));
+          case "serial#":
+            onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.serial));
+          default:
+            break;
+        }
+      },
+      child: Container(),
+    );
   }
 
   //* On Read
