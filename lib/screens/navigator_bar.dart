@@ -96,7 +96,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
           ),
           //* Button Voice
           Positioned(
-              child: ChickiesDotButton(onPressed: () {
+              child: DotButton(onPressed: () {
                 setState(() {
                   isOpenVoice = !isOpenVoice;
                 });
@@ -130,15 +130,17 @@ class _NavigatorBarState extends State<NavigatorBar> {
     );
   }
 }
-class ChickiesDotButton extends StatelessWidget {
-  const ChickiesDotButton({
+class DotButton extends StatelessWidget {
+  const DotButton({
     super.key,
     required this.onPressed,
     this.child,
+    this.color,
   });
 
   final VoidCallback onPressed;
   final Widget? child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -147,12 +149,12 @@ class ChickiesDotButton extends StatelessWidget {
       width: 60,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: ChickiesColor.primary.withOpacity(0.2), spreadRadius: 2, blurRadius: 10, offset: Offset(0, 10))],
+        boxShadow: [BoxShadow(color: (color ??ChickiesColor.primary).withOpacity(0.2), spreadRadius: 2, blurRadius: 10, offset: Offset(0, 10))],
       ),
       child: FloatingActionButton(
         onPressed: onPressed,
         child: child ?? Icon(Icons.multitrack_audio, color: Colors.white, size: 30),
-        backgroundColor: ChickiesColor.primary,
+        backgroundColor: color ?? ChickiesColor.primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
           Radius.circular(25),

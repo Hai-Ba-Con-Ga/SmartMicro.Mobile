@@ -10,6 +10,7 @@ class RoundedContainer extends Container {
     super.margin = const EdgeInsets.all(20),
     super.child,
     super.color,
+    super.decoration,
   });
 
   @override
@@ -18,7 +19,7 @@ class RoundedContainer extends Container {
         padding: padding,
         margin: margin,
         constraints: constraints,
-        decoration: BoxDecoration(
+        decoration: decoration ?? BoxDecoration(
           color: color ?? ChickiesColor.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [

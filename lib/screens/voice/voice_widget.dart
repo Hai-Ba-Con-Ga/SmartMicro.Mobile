@@ -99,7 +99,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
                   ),
                   Positioned(
                     bottom: 20,
-                    child: ChickiesDotButton(
+                    child: DotButton(
                       child: Icon(_speechToText.isNotListening ? Icons.mic_off_sharp : Icons.mic_sharp, color: Colors.white, size: 25),
                       onPressed:
                           // () {

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:SmartMicro.Mobile/BLE/screens/device_control_screen.dart';
 import 'package:chickies_ui/Colors.dart';
+import 'package:chickies_ui/Components/Button/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -84,7 +86,7 @@ class _ScanScreenState extends State<ScanScreen> {
     device.connectAndUpdateStream().catchError((e) {
       Snackbar.show(ABC.c, prettyException("Connect Error:", e), success: false);
     });
-    MaterialPageRoute route = MaterialPageRoute(builder: (context) => DeviceScreen(device: device), settings: RouteSettings(name: '/DeviceScreen'));
+    MaterialPageRoute route = MaterialPageRoute(builder: (context) => DeviceControlScreen(device: device), settings: RouteSettings(name: '/DeviceControlScreen'));
     Navigator.of(context).push(route);
   }
 
@@ -104,22 +106,19 @@ class _ScanScreenState extends State<ScanScreen> {
     if (FlutterBluePlus.isScanningNow) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: ElevatedButton(
-          child: const Icon(Icons.stop),
+        child: ChickiesButton(
+          text: 'Scanning...',
           onPressed: onStopPressed,
-          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
+          // style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
         ),
       );
     } else {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        child: ElevatedButton(
-          child: const Text(
-            "SCAN",
-            style: TextStyle(color: Colors.white),
-          ),
+        child: ChickiesButton(
+          text: 'Scan for Devices',
           onPressed: onScanPressed,
-          style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
+          // style: ElevatedButton.styleFrom(backgroundColor: ChickiesColor.purple, foregroundColor: Colors.white),
         ),
       );
     }
@@ -133,8 +132,8 @@ class _ScanScreenState extends State<ScanScreen> {
             device: d,
             onOpen: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DeviceScreen(device: d),
-                settings: RouteSettings(name: '/DeviceScreen'),
+                builder: (context) => DeviceControlScreen(device: d),
+                settings: RouteSettings(name: '/DeviceControlScreen'),
               ),
             ),
             onConnect: () => onConnectPressed(d),
@@ -170,13 +169,15 @@ class _ScanScreenState extends State<ScanScreen> {
               // Navigator.pop(context);
             },
           ),
-          title: Image.asset(
-            'assets/images/chickies_logo2.png',
-            height: 80,
-          ),
+          leadingWidth: 0,
+          title: Text("Find Devices", style: TextStyle(color: ChickiesColor.primary, fontSize: 30)),
+          // Image.asset(
+          //   'assets/images/chickies_logo2.png',
+          //   height: 80,
+          // ),
           excludeHeaderSemantics: false,
-          toolbarHeight: 90,
-          centerTitle: true,
+          // toolbarHeight: 90,
+          // centerTitle: true,
           backgroundColor: Colors.transparent,
           foregroundColor: ChickiesColor.primary,
           elevation: 0,
@@ -185,13 +186,14 @@ class _ScanScreenState extends State<ScanScreen> {
           onRefresh: onRefresh,
           child: ListView(
             children: <Widget>[
-              buildScanButton(context),
+              // buildScanButton(context),
               ..._buildSystemDeviceTiles(context),
               ..._buildScanResultTiles(context),
             ],
           ),
         ),
-        // floatingActionButton: buildScanButton(context),
+        floatingActionButton: buildScanButton(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }

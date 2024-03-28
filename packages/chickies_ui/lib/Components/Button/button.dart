@@ -42,7 +42,7 @@ class ChickiesButtonState extends State<ChickiesButton> {
         child: ElevatedButton(
           onPressed: widget.onPressed,
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
+            margin: const EdgeInsets.symmetric(vertical: 15),
             alignment: Alignment.center,
             width: widget.width ?? double.infinity,
             child: widget.child ?? Text(widget.text?.toUpperCase() ?? 'Button', style: TextStyle(fontWeight: FontWeight.bold)),
