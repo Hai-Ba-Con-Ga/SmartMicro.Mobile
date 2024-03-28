@@ -16,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'voice/bloc/voice_bloc.dart';
 
 class NavigatorBar extends StatefulWidget {
+  
+  const NavigatorBar({super.key});
   @override
   _NavigatorBarState createState() => _NavigatorBarState();
 }

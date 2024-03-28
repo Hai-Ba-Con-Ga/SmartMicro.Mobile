@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:SmartMicro.Mobile/BLE/iot_screen.dart';
+import 'package:SmartMicro.Mobile/api/shared_prefs.dart';
 import 'package:SmartMicro.Mobile/screens/login_screen.dart';
 import 'package:SmartMicro.Mobile/screens/navigator_bar.dart';
 import 'package:SmartMicro.Mobile/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 import 'material3_demo/constants.dart';
 
@@ -34,13 +34,18 @@ void main() async {
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
   await dotenv.load(fileName: '.env');
   
+  final isLogin = await SharedPrefs.getString('access_token') != null;
+  final startScreen = isLogin ? const NavigatorBar() : const WelcomeScreen();
+
   runApp(
-    const App(),
+    App(startScreen: startScreen),
   );
 }
 
 class App extends StatefulWidget {
-  const App({super.key});
+  final Widget startScreen;
+
+  const App({super.key, this.startScreen = const WelcomeScreen()});
 
   @override
   State<App> createState() => _AppState();
@@ -93,18 +98,17 @@ class _AppState extends State<App> {
       title: 'Material 3',
       themeMode: themeMode,
       theme: ThemeData(
-        colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed ? colorSelected.color : null,
-        colorScheme: colorSelectionMethod == ColorSelectionMethod.image ? imageColorScheme : null,
-        useMaterial3: useMaterial3,
-        brightness: Brightness.light,
-        fontFamily: 'MadimiOne' 
-      ),
+          colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed ? colorSelected.color : null,
+          colorScheme: colorSelectionMethod == ColorSelectionMethod.image ? imageColorScheme : null,
+          useMaterial3: useMaterial3,
+          brightness: Brightness.light,
+          fontFamily: 'MadimiOne'),
       darkTheme: ThemeData(
         colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed ? colorSelected.color : imageColorScheme!.primary,
         useMaterial3: useMaterial3,
         brightness: Brightness.dark,
       ),
-      
+
       // home: Home(
       //   useLightMode: useLightMode,
       //   useMaterial3: useMaterial3,
@@ -116,9 +120,7 @@ class _AppState extends State<App> {
       //   handleImageSelect: handleImageSelect,
       //   colorSelectionMethod: colorSelectionMethod,
       // ),
-      // home: NavigatorBar(),
-      // home: LoginScreen(),
-      home: WelcomeScreen(),
+      home: widget.startScreen,
       navigatorObservers: [BluetoothAdapterStateObserver()],
     );
   }

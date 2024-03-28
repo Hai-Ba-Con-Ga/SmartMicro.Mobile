@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:SmartMicro.Mobile/data/account.dart';
+import 'package:SmartMicro.Mobile/data/device.dart';
 import 'package:http/http.dart' as http;
 
 class APIClient {
@@ -87,6 +88,24 @@ class APIClient {
       return true;
     } else {
       return false;
+    }
+  }
+
+  //* Get all devices
+  Future<List<Device>> getDevices() async {
+    final response = await http.get(
+      Uri.parse('$BASE_URL/device'),
+      // headers: <String, String>{
+      //   'Authorization': 'Bearer'
+      //   '$token',
+      // },
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body as String) as Map<String, dynamic>;
+      List<Device> list = (data['data'] as List<dynamic>).map((val) => Device.fromJson(val as Map<String, dynamic>)).toList();
+      return list;
+    } else {
+      throw Exception('Failed to load devices');
     }
   }
 }
