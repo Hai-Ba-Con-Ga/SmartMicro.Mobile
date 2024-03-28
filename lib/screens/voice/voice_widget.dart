@@ -26,6 +26,7 @@ class VoiceWidget extends StatefulWidget {
 }
 
 class _VoiceWidgetState extends State<VoiceWidget> {
+  static const EXPIRE_TIME = 5;
   // TextToSpeech tts = TextToSpeech();
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
@@ -37,28 +38,21 @@ class _VoiceWidgetState extends State<VoiceWidget> {
     _initSpeech();
   }
 
-  /// This has to happen only once per app
   void _initSpeech() async {
     _speechEnabled = await _speechToText.initialize();
     print(_speechEnabled);
     setState(() {});
   }
 
-  // /// Each time to start a speech recognition session
-  // void _startListening
-
-  /// Manually stop the active speech recognition session
-  /// Note that there are also timeouts that each platform enforces
-  /// and the SpeechToText plugin supports setting timeouts on the
-  /// listen method.
   void _stopListening() async {
     await _speechToText.stop();
     setState(() {});
   }
 
   void _callChatGPT() async {
-    context.read<VoiceBloc>().add(UpdateMessage('loading...'));
+    context.read<VoiceBloc>().add(UpdateMessage("Loading..."));
     final response = await APIClientChatGPT().fetchData(_lastWords);
+
     context.read<VoiceBloc>().add(UpdateMessage(response));
     // await tts.speak(response);
   }
@@ -66,7 +60,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
   int _counter = 0;
   void _startTimer() {
     setState(() {
-      _counter = 5;
+      _counter = EXPIRE_TIME;
     });
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (_counter >= 0) {
@@ -129,7 +123,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
                                         context.read<VoiceBloc>().add(UpdateMessage(result.recognizedWords));
                                       },
                                       listenFor: Duration(
-                                        seconds: 5,
+                                        seconds: EXPIRE_TIME,
                                       ));
                                   setState(
                                     () {},

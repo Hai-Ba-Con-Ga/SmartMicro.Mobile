@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:SmartMicro.Mobile/BLE/constants.dart';
+import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Container/rounded_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:collection/collection.dart'; // You have to add this manually, for some reason it cannot be added automatically
 
@@ -241,12 +243,21 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
                 buildRemoteId(context),
                 _uartServiceTiles(context, widget.device),
                 ..._buildServiceTiles(context, widget.device),
+                _callByVoice(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  BlocListener<VoiceBloc, VoiceState> _callByVoice() {
+    return BlocListener<VoiceBloc, VoiceState>(
+        listenWhen: (previous, current) => current.message != previous.message && current.message.isNotEmpty && current.message.characters.last == '#',
+        listener: (context, state) {
+          onWritePressed(widget.rxChar, message: BleData().mapping(MessageData.serial) + state.message.substring(0, state.message.length - 1));
+        });
   }
 
   //* On Read

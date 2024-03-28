@@ -85,9 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ChickiesButton(
           reversedColor: true,
           onPressed: () {
-            Navigator.push(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => NavigatorBar()),
+              (route) => false,
             );
           },
           text: 'Sign in',

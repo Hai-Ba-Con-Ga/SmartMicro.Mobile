@@ -4,6 +4,7 @@ import 'package:SmartMicro.Mobile/screens/chart_screen.dart';
 import 'package:SmartMicro.Mobile/screens/home_screen.dart';
 import 'package:SmartMicro.Mobile/screens/user_screen.dart';
 import 'package:SmartMicro.Mobile/screens/voice/test_speech_to_text_screen.dart';
+import 'package:SmartMicro.Mobile/screens/voice/test_widget.dart';
 import 'package:SmartMicro.Mobile/screens/voice/voice_widget.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/chickies_ui.dart';
@@ -66,8 +67,20 @@ class _NavigatorBarState extends State<NavigatorBar> {
               children: <Widget>[
                 IotScreen(),
                 // ScanScreen(),
-               ChartScreen(),
-               UserScreen(),
+                ChartScreen(),
+                //  UserScreen(),
+                Navigator(
+                  onGenerateRoute: (settings) {
+                    Widget page1 = UserScreen();
+                    if (settings.name == 'user_screen') {
+                      return MaterialPageRoute(builder: (context) => page1);
+                    }
+                    if (settings.name == 'test_widget') {
+                      return MaterialPageRoute(builder: (context) => TestWidget());
+                    }
+                      return MaterialPageRoute(builder: (context) => page1);
+                  },
+                ),
                 // TestSpeechToTextScreen(),
               ],
             ),
@@ -130,6 +143,7 @@ class _NavigatorBarState extends State<NavigatorBar> {
     );
   }
 }
+
 class DotButton extends StatelessWidget {
   const DotButton({
     super.key,
@@ -149,7 +163,7 @@ class DotButton extends StatelessWidget {
       width: 60,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: (color ??ChickiesColor.primary).withOpacity(0.2), spreadRadius: 2, blurRadius: 10, offset: Offset(0, 10))],
+        boxShadow: [BoxShadow(color: (color ?? ChickiesColor.primary).withOpacity(0.2), spreadRadius: 2, blurRadius: 10, offset: Offset(0, 10))],
       ),
       child: FloatingActionButton(
         onPressed: onPressed,
@@ -163,5 +177,3 @@ class DotButton extends StatelessWidget {
     );
   }
 }
-
-
