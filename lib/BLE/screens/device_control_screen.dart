@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:SmartMicro.Mobile/BLE/constants.dart';
+import 'package:SmartMicro.Mobile/api/client.dart';
+import 'package:SmartMicro.Mobile/api/shared_prefs.dart';
+import 'package:SmartMicro.Mobile/data/device.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Container/rounded_container.dart';
@@ -141,7 +144,9 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(height: 20),
         Row(
+      mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //* Open Button
             GestureDetector(
@@ -156,6 +161,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
           ],
         ),
         Row(
+      mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //* On Button
             GestureDetector(
@@ -179,6 +185,7 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         GestureDetector(
           onTap: () async => {
             //* add device
+            createDevice(BleData().bytesToString(_rawSerial), widget.device.platformName),
             // await onReadPressed(widget.txChar),
             // await onReadPressed(widget.rxChar),
           },
@@ -186,6 +193,8 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
         ),
       ],
     );
+
+    
   }
 
   CharacteristicTile _buildCharacteristicTile(BluetoothCharacteristic c) {
@@ -303,5 +312,47 @@ class _DeviceControlScreenState extends State<DeviceControlScreen> {
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Write Error:", e), success: false);
     }
+  }
+  Future createDevice(String serialId, String deviceName) async {
+    print('create new device');
+
+    final newDevices = await APIClient().getDevicesByOwnerId(await SharedPrefs.getInt('userId') ?? 0);
+    final isExist = newDevices.any((element) => element.serialId == serialId);
+
+    if (isExist) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Device already exist'),
+          content: Text('This device already exist in your account'),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+        ),
+      );
+      return;
+    }
+
+    final userId = await SharedPrefs.getInt('userId');
+    final response = await APIClient().createDevice(Device(
+      serialId: serialId,
+      ownerId: userId,
+      deviceTypeId: 2,
+      deviceName: 'Device 1',
+      createdDate: DateTime.now(),
+    ));
+    if (response) {
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Create new device'),
+          content: Text('Create new device success'),
+          actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('OK'))],
+        ),
+      );
+    }
+  }
+
+  Future deleteDevice(int id) async {
+    final response = await APIClient().deleteDevice(id);
   }
 }

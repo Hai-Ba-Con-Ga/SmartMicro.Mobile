@@ -40,8 +40,7 @@ dependencies:
   intl: ^0.19.0
   
   signalr_netcore:
-
-  # text_to_speech: ^0.2.3
+  text_to_speech: ^0.2.3
 
 dev_dependencies:
   flutter_test:

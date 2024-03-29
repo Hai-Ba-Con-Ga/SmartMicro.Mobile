@@ -1,4 +1,5 @@
 import 'package:SmartMicro.Mobile/api/test_hub.dart';
+import 'package:SmartMicro.Mobile/data/collected_data.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Button/button.dart';
@@ -7,9 +8,69 @@ import 'package:chickies_ui/chickies_ui.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:signalr_netcore/json_hub_protocol.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
-class _TemperatureChart extends StatelessWidget {
+class _TemperatureChart extends StatefulWidget {
   const _TemperatureChart();
+
+  @override
+  State<_TemperatureChart> createState() => _TemperatureChartState();
+}
+
+class _TemperatureChartState extends State<_TemperatureChart> {
+  final hubConnection = HubConnectionBuilder()
+      .withHubProtocol(JsonHubProtocol())
+      .withUrl(
+        'https://iot.wyvernp.id.vn/hubs/data-report?searialId=-1946710095',
+        transportType: HttpTransportType.WebSockets,
+      )
+      .build();
+
+  TextEditingController messageController = TextEditingController();
+  List<CollectedData> messages = [];
+
+  final MAX_X = 20;
+
+  @override
+  void initState() {
+    super.initState();
+    _startHubConnection();
+
+    // Define an event handler for receiving messages
+    hubConnection.on('ReceiveDataReport', _handleReceivedMessage);
+  }
+
+  void _startHubConnection() async {
+    try {
+      await hubConnection.start();
+      print('SignalR connection started.');
+    } catch (e) {
+      print('Error starting SignalR connection: $e');
+    }
+  }
+
+  void _handleReceivedMessage(List<Object?>? arguments) {
+    print('Received message: $arguments');
+    final user = CollectedData.fromJson(arguments![0] as Map<String, dynamic>);
+    if ((user.collectedDataTypeId ?? 0) != 1) {
+      return;
+    }
+
+    print(user.dataValue);
+
+    if (messages.length > MAX_X) {
+      messages = messages.sublist(0, MAX_X);
+    }
+
+    setState(() {
+      if (messages.length == 0)
+        messages = [user];
+      else
+        messages = [user, ...messages];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +87,8 @@ class _TemperatureChart extends StatelessWidget {
         borderData: borderData,
         lineBarsData: lineBarsData1,
         minX: 0,
-        maxX: 14,
-        maxY: 4,
+        maxX: MAX_X.toDouble(),
+        maxY: 5,
         minY: 0,
       );
 
@@ -96,15 +157,32 @@ class _TemperatureChart extends StatelessWidget {
       fontSize: 16,
     );
     Widget text;
+
+    //messages -> 20 phan tu
+    var first = '';
+    if (messages.length >= 20) {
+      first = DateFormat('HH:mm:ss').format(messages[19].createdDate?.add(Duration(hours: 7)) ?? DateTime.now());
+    }
+
+    var middle = '';
+    if (messages.length >= 11) {
+      middle = DateFormat('HH:mm:ss').format(messages[10].createdDate?.add(Duration(hours: 7)) ?? DateTime.now());
+    }
+
+    var last = '';
+    if (messages.length >= 1) {
+      last = DateFormat('HH:mm:ss').format(messages.first.createdDate?.add(Duration(hours: 7)) ?? DateTime.now());
+    }
+
     switch (value.toInt()) {
-      case 2:
-        text = const Text('10:00', style: style);
+      case 0:
+        text = Text(first);
         break;
-      case 7:
-        text = const Text('11:00', style: style);
+      case 10:
+        text = Text(middle);
         break;
-      case 12:
-        text = const Text('12:00', style: style);
+      case 20:
+        text = Text(last);
         break;
       default:
         text = const Text('');
@@ -144,13 +222,18 @@ class _TemperatureChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 2.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 3),
-          FlSpot(10, 1.3),
-          FlSpot(13, 2.5),
-        ],
+        spots: messages.length != 0
+            ? messages.map((e) => FlSpot(MAX_X - messages.indexOf(e).toDouble(), int.parse(e.dataValue ?? "10") / 10)).toList()
+            : [
+                FlSpot(20, 3),
+              ],
+        //     [
+        //   FlSpot(1, 2.8),
+        //   FlSpot(3, 1.9),
+        //   FlSpot(6, 5),
+        //   FlSpot(10, 1.3),
+        //   FlSpot(13, 2.5),
+        // ],
       );
 }
 

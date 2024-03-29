@@ -1,3 +1,4 @@
+import 'package:SmartMicro.Mobile/data/collected_data.dart';
 import 'package:SmartMicro.Mobile/screens/voice/bloc/voice_bloc.dart';
 import 'package:chickies_ui/Colors.dart';
 import 'package:chickies_ui/Components/Button/button.dart';
@@ -16,7 +17,13 @@ class TestHub extends StatefulWidget {
 }
 
 class _TestHubState extends State<TestHub> {
-  final hubConnection = HubConnectionBuilder().withHubProtocol(JsonHubProtocol()).withUrl('https://iot.wyvernp.id.vn/hubs/data-report').build();
+  final hubConnection = HubConnectionBuilder()
+      .withHubProtocol(JsonHubProtocol())
+      .withUrl(
+        'https://iot.wyvernp.id.vn/hubs/data-report?searialId=-1946710095',
+        transportType: HttpTransportType.WebSockets,
+      )
+      .build();
 
   TextEditingController messageController = TextEditingController();
   List<String> messages = [];
@@ -41,23 +48,12 @@ class _TestHubState extends State<TestHub> {
 
   void _handleReceivedMessage(List<Object?>? arguments) {
     print('Received message: $arguments');
-    String user = arguments?[0] as String;
-    String message = arguments?[1] as String;
+    final user = arguments![0] as CollectedData;
 
     setState(() {
-      messages.add('$user: $message');
-    });
-  }
-
-  void _sendMessage() {
-    String user = 'You'; // Replace with the user's name or identifier
-    String message = messageController.text;
-
-    // Send the message to the SignalR hub
-    hubConnection.invoke('SendMessage', args: [user, message]);
-
-    // Clear the text input field
-    messageController.text = '';
+      messages.add('${user.dataValue} - ${user.dataUnit} - ${user.createdDate}');
+    }
+    );
   }
 
   @override
@@ -69,12 +65,13 @@ class _TestHubState extends State<TestHub> {
         ),
         body: Column(
           children: [
+            // Text("123"),
             Expanded(
               child: ListView.builder(
                 itemCount: messages.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(messages[index]),
+                    title: Text(index.toString() + messages[index]),
                   );
                 },
               ),
@@ -91,10 +88,10 @@ class _TestHubState extends State<TestHub> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: _sendMessage,
-                  ),
+                  // IconButton(
+                  //   icon: Icon(Icons.send),
+                  //   onPressed: _sendMessage,
+                  // ),
                 ],
               ),
             ),

@@ -11,7 +11,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-// import 'package:text_to_speech/text_to_speech.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
 class VoiceWidget extends StatefulWidget {
   const VoiceWidget({
@@ -27,7 +27,7 @@ class VoiceWidget extends StatefulWidget {
 
 class _VoiceWidgetState extends State<VoiceWidget> {
   static const EXPIRE_TIME = 4;
-  // TextToSpeech tts = TextToSpeech();
+  TextToSpeech tts = TextToSpeech();
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
@@ -55,7 +55,7 @@ class _VoiceWidgetState extends State<VoiceWidget> {
     final response = await APIClientChatGPT().fetchData(_lastWords);
 
     context.read<VoiceBloc>().add(UpdateMessage(response));
-    // await tts.speak(response);
+    await tts.speak(response);
   }
 
   int _counter = 0;
